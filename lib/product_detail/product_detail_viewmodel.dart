@@ -15,7 +15,7 @@ class ProductDetailViewModel extends GetxController {
 
   @override
   void onReady() {
-
+    product.value = Get.arguments['product'];
     super.onReady();
   }
 }

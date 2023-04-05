@@ -87,37 +87,39 @@ class ProductDetailView extends StatelessWidget {
   Widget productImage() {
     return Stack(
       children: [
-        Container(
-          color: const Color(0xffECF6F6),
-          child: CachedNetworkImage(
-            width: double.infinity,
-            height: Get.height * 0.25,
-            imageUrl: '',
-            imageBuilder: (context, imageProvider) {
-              return Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: imageProvider,
-                    fit: BoxFit.fill,
+        Obx(
+          () => Container(
+            color: const Color(0xffECF6F6),
+            child: CachedNetworkImage(
+              width: double.infinity,
+              height: Get.height * 0.25,
+              imageUrl: viewModel.product.value.image ?? '',
+              imageBuilder: (context, imageProvider) {
+                return Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-              );
-            },
-            errorWidget: (context, url, error) {
-              return Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/default_image.png'),
-                    fit: BoxFit.fill,
+                );
+              },
+              errorWidget: (context, url, error) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/default_image.png'),
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-              );
-            },
-            placeholder: (context, url) {
-              return const Center(
-                child: CircularProgressIndicator(strokeWidth: 2.0),
-              );
-            },
+                );
+              },
+              placeholder: (context, url) {
+                return const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2.0),
+                );
+              },
+            ),
           ),
         ),
         Material(
@@ -128,7 +130,9 @@ class ProductDetailView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.back();
+                  },
                   icon: const Icon(CupertinoIcons.arrow_left),
                 ),
                 IconButton(
@@ -146,17 +150,17 @@ class ProductDetailView extends StatelessWidget {
   Widget productTitlePrice() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
+      children: [
         Expanded(
           child: Text(
-            'Apple watch series 7',
-            style: TextStyle(
+            '${viewModel.product.value.title} ${viewModel.product.value.subtitle}',
+            style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 20,
             ),
           ),
         ),
-        Text(
+        const Text(
           '\$2000',
           style: TextStyle(
               fontWeight: FontWeight.w500,
