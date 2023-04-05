@@ -64,13 +64,15 @@ class ProductDetailView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 35),
-                    child: Text(
-                      'What is a case study? A case study is a research approach that is used to generate an in-depth, multi-faceted understanding of a complex issue in its real-life context. It is an established research design that is used extensively in a wide variety of disciplines,',
-                      style: TextStyle(
-                        color: Color(0xffAAA0A0),
-                        fontSize: 15,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 35),
+                    child: Obx(
+                      () => Text(
+                        viewModel.product.value.details ?? '',
+                        style: const TextStyle(
+                          color: Color(0xffAAA0A0),
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                   ),
@@ -152,20 +154,24 @@ class ProductDetailView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: Text(
-            '${viewModel.product.value.title} ${viewModel.product.value.subtitle}',
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
+          child: Obx(
+            () => Text(
+              '${viewModel.product.value.title} ${viewModel.product.value.subtitle}',
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+              ),
             ),
           ),
         ),
-        const Text(
-          '\$2000',
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 24,
-              color: Color(0xff5534A5)),
+        Obx(
+          () => Text(
+            '\$${viewModel.product.value.price ?? ''}',
+            style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 24,
+                color: Color(0xff5534A5)),
+          ),
         )
       ],
     );
