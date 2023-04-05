@@ -125,6 +125,7 @@ class HomeView extends StatelessWidget {
     return InkWell(
       onTap: () {
         viewModel.selectedIndex.value = index;
+        viewModel.filterData();
       },
       child: Container(
         padding: const EdgeInsets.only(top: 5),
@@ -238,8 +239,7 @@ class HomeView extends StatelessWidget {
   Widget productImage(int index) {
     return CachedNetworkImage(
       height: 110,
-      imageUrl:
-          viewModel.filteredProductsList[index].image ?? '',
+      imageUrl: viewModel.filteredProductsList[index].image ?? '',
       imageBuilder: (context, imageProvider) {
         return Container(
           decoration: BoxDecoration(

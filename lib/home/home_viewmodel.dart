@@ -52,4 +52,10 @@ class HomeViewModel extends GetxController {
       }
     });
   }
+
+  filterData(){
+    filteredProductsList.clear();
+    filteredProductsList.addAll(allProductsList.where((e) =>
+    e.categoryId == categoriesList[selectedIndex.value].categoryId));
+  }
 }
