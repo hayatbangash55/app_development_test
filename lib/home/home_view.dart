@@ -123,29 +123,33 @@ class HomeView extends StatelessWidget {
   }
 
   Widget categoriesViewItem(int index) {
-    return InkWell(
-      onTap: () {
-        viewModel.selectedIndex.value = index;
-        viewModel.filterData();
-      },
-      child: Container(
-        padding: const EdgeInsets.only(top: 5),
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              width: 2,
-              color: Color(0xff004EDA),
-            ),
+    return Obx(
+      () => InkWell(
+        onTap: () {
+          viewModel.selectedIndex.value = index;
+          viewModel.filterData();
+        },
+        child: Container(
+          padding: const EdgeInsets.only(top: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            border: viewModel.selectedIndex.value == index
+                ? const Border(
+                    bottom: BorderSide(
+                      width: 2,
+                      color: Color(0xff004EDA),
+                    ),
+                  )
+                : null,
           ),
-        ),
-        child: Text(
-          '${viewModel.categoriesList[index].categoryName}',
-          style: TextStyle(
-            color: viewModel.selectedIndex.value == index
-                ? const Color(0xff004EDA)
-                : const Color(0xff988888),
-            fontSize: 20,
+          child: Text(
+            '${viewModel.categoriesList[index].categoryName}',
+            style: TextStyle(
+              color: viewModel.selectedIndex.value == index
+                  ? const Color(0xff004EDA)
+                  : const Color(0xff988888),
+              fontSize: 20,
+            ),
           ),
         ),
       ),
@@ -155,20 +159,25 @@ class HomeView extends StatelessWidget {
   Widget gridList() {
     return Obx(
       () => Expanded(
-        child: GridView.builder(
-          itemCount: viewModel.filteredProductsList.length,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 13,
-            mainAxisSpacing: 15,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            return gridViewItem(index);
-          },
-        ),
+        child: viewModel.filteredProductsList.isNotEmpty
+            ? GridView.builder(
+                itemCount: viewModel.filteredProductsList.length,
+                physics: const BouncingScrollPhysics(),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 13,
+                  mainAxisSpacing: 15,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  return gridViewItem(index);
+                },
+              )
+            : const Center(
+                child: Text('No Item Found'),
+              ),
       ),
     );
   }
