@@ -12,30 +12,31 @@ class HomeView extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xffECF6F6),
-        body: Padding(
-          padding: const EdgeInsets.all(25),
-          child: Column(
-            children: [
-              Row(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 25, right: 25, top: 20),
+              child: Row(
                 children: [
                   menuButton(),
                   searchTextField(),
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 70),
-                child: Text(
-                  'find your suitable watch now.',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 36,
-                  ),
+            ),
+            const Padding(
+              padding:
+                  EdgeInsets.only(top: 25, bottom: 40, left: 20, right: 20),
+              child: Text(
+                'find your suitable watch now.',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 36,
                 ),
               ),
-              categoriesListView(),
-              gridList(),
-            ],
-          ),
+            ),
+            categoriesListView(),
+            gridList(),
+          ],
         ),
       ),
     );
@@ -104,15 +105,18 @@ class HomeView extends StatelessWidget {
   }
 
   Widget categoriesListView() {
-    return SizedBox(
-      height: 35,
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) {
-          return categoriesViewItem(index);
-        },
+    return Obx(
+      () => SizedBox(
+        height: 40,
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          physics: const BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          itemCount: viewModel.categoriesList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return categoriesViewItem(index);
+          },
+        ),
       ),
     );
   }
@@ -123,7 +127,8 @@ class HomeView extends StatelessWidget {
         viewModel.selectedIndex.value = index;
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.only(top: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: const BoxDecoration(
           border: Border(
             bottom: BorderSide(
@@ -133,7 +138,7 @@ class HomeView extends StatelessWidget {
           ),
         ),
         child: Text(
-          'abcdef',
+          '${viewModel.categoriesList[index].categoryName}',
           style: TextStyle(
             color: viewModel.selectedIndex.value == index
                 ? const Color(0xff004EDA)
@@ -146,70 +151,100 @@ class HomeView extends StatelessWidget {
   }
 
   Widget gridList() {
-    return Expanded(
-      child: GridView.builder(
-        itemCount: 6,
-        padding: const EdgeInsets.all(10),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 15,
+    return Obx(
+      () => Expanded(
+        child: GridView.builder(
+          itemCount: viewModel.filteredProductsList.length,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75,
+            crossAxisSpacing: 13,
+            mainAxisSpacing: 15,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return gridViewItem(index);
+          },
         ),
-        itemBuilder: (BuildContext context, int index) {
-          return gridViewItem(index);
-        },
       ),
     );
   }
 
   Widget gridViewItem(int index) {
-    return Container(
-      decoration: BoxDecoration(
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: () {},
         borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          productImage(index),
-          const Text(
-            'Apple Watch',
-            style: TextStyle(
-              color: Color(0xff0F1010),
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Column(
+            children: [
+              productImage(index),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(5),
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        viewModel.filteredProductsList[index].title ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Color(0xff0F1010),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        viewModel.filteredProductsList[index].subtitle ?? '',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Color(0xff7A7474),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          '\$${viewModel.filteredProductsList[index].price ?? '0'}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          const Text(
-            'series 1',
-            style: TextStyle(
-              color: Color(0xff0F1010),
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const Text(
-            '\$123',
-            style: TextStyle(
-              color: Color(0xff0F1010),
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget productImage(int index) {
     return CachedNetworkImage(
-      height: 100,
+      height: 110,
       imageUrl:
-          '',
+          viewModel.filteredProductsList[index].image ?? '',
       imageBuilder: (context, imageProvider) {
         return Container(
           decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xffB8A6A6)),
+            borderRadius: BorderRadius.circular(14),
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.cover,
@@ -219,9 +254,11 @@ class HomeView extends StatelessWidget {
       },
       errorWidget: (context, url, error) {
         return Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/carImage.jfif'),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xffB8A6A6)),
+            borderRadius: BorderRadius.circular(14),
+            image: const DecorationImage(
+              image: AssetImage('assets/images/default_image.png'),
               fit: BoxFit.fill,
             ),
           ),
