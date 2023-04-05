@@ -1,4 +1,5 @@
 import 'package:app_development_test/home/home_viewmodel.dart';
+import 'package:app_development_test/product_detail/product_detail_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -177,7 +178,10 @@ class HomeView extends StatelessWidget {
       color: Colors.white,
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Get.to(() => ProductDetailView(),
+              arguments: {'product': viewModel.filteredProductsList[index]});
+        },
         borderRadius: BorderRadius.circular(14),
         child: Padding(
           padding: const EdgeInsets.all(6),
